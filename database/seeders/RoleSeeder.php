@@ -8,16 +8,18 @@ use App\Models\Role;
 
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        role::create([
+       
+
+        Role::create([
+            'id' => 1,
             'role_name' => 'Admin',
         ]);
-        role::create([
-             'role_name' => 'User',
+
+        Role::create([
+            'id' => 2,
+            'role_name' => 'User',
         ]);
     }
 }

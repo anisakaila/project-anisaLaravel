@@ -6,13 +6,37 @@
     <title>Data Siswa</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .nav-link{
+            transition: all 0.3s ease;
+            border-radius:8px;
+            padding:6px 12px;
+        }
+
+        .nav-link:hover{
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav-link:active{
+            transform: translateY(-10px) scale(0.95);
+        }
+
+        .nav-link.active{
+            background: rgba(255,255,255,0.25);
+        }
+    </style>
 </head>
+
 <body class="bg-light">
 
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#">SMKN 1 KAWALI</a>
+        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">
+            SMKN 1 KAWALI
+        </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav">
@@ -21,16 +45,25 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+
                 <li class="nav-item">
                     <a class="nav-link active fw-semibold" href="{{ route('siswa.index') }}">
                         Data Siswa
                     </a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('kelas.index') }}">
                         Data Kelas
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-warning fw-bold" href="{{ route('dashboard') }}">
+                        Dashboard
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -52,9 +85,12 @@
                 </div>
             @endif
 
-            <a href="{{ route('siswa.create') }}" class="btn btn-primary mb-3">
-                + Tambah Siswa
-            </a>
+            {{-- 🔥 TOMBOL TAMBAH (HANYA ADMIN) --}}
+            @if(auth()->user()->role && auth()->user()->role->role_name === 'Admin')
+                <a href="{{ route('siswa.create') }}" class="btn btn-primary mb-3">
+                    + Tambah Siswa
+                </a>
+            @endif
 
             <table class="table table-bordered table-striped align-middle">
                 <thead class="table-primary text-center">
@@ -81,7 +117,10 @@
                         </td>
                         <td>{{ $dt->alamat }}</td>
                         <td>{{ $dt->no_telp }}</td>
+
                         <td class="text-center">
+                        @if(auth()->user()->role && auth()->user()->role->role_name === 'Admin')
+
                             <a href="{{ route('siswa.edit', $dt->id) }}" class="btn btn-outline-primary btn-sm">
                                 Edit
                             </a>
@@ -95,7 +134,12 @@
                                     Hapus
                                 </button>
                             </form>
+
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
                         </td>
+
                     </tr>
                     @endforeach
                 </tbody>
